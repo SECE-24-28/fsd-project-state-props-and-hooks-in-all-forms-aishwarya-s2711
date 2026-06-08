@@ -52,6 +52,8 @@ app.use('/api/auth',     require('./routers/authRoutes'));
 app.use('/api/packages', require('./routers/packageRoutes'));
 app.use('/api/bookings', require('./routers/bookingRoutes'));
 app.use('/api/users',    require('./routers/userrouter'));
+app.use('/api/admin',    require('./routers/adminRoutes'));
+app.use('/api/reviews',  require('./routers/reviewRoutes'));
 
 // ── 404 ───────────────────────────────────────────────────────────────────────
 app.use((req, res) => res.status(404).json({ message: `Not found: ${req.method} ${req.path}` }));

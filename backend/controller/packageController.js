@@ -1,5 +1,7 @@
 const Package = require('../model/Package');
 const Booking = require('../model/Booking');
+const Notification = require('../model/Notification');
+const Payment = require('../model/Payment');
 const mongoose = require('mongoose');
 
 // ── Packages ──────────────────────────────────────────────────────────────────
@@ -100,6 +102,9 @@ exports.createBooking = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(packageId))
       return res.status(400).json({ message: 'Invalid packageId' });
 
+    const pkg = await Package.findById(packageId);
+    if (!pkg) return res.status(404).json({ message: 'Package not found' });
+
     const booking = await Booking.create({
       user:        req.user._id,
       package:     packageId,
@@ -107,6 +112,15 @@ exports.createBooking = async (req, res) => {
       travelDate:  new Date(travelDate),
       totalAmount: Number(totalAmount),
       specialReq:  specialReq || '',
+      status:      'Pending',
+    });
+
+    // Create notification for admin
+    await Notification.create({
+      type: 'Booking',
+      title: 'New Booking Submitted',
+      message: `A new booking has been submitted for package "${pkg.title}" by ${req.user.name || 'a customer'}.`,
+      data: { bookingId: booking._id }
     });
 
     res.status(201).json(booking);
@@ -144,12 +158,35 @@ exports.updateBookingStatus = async (req, res) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.id))
       return res.status(400).json({ message: 'Invalid booking id' });
+
+    const updateFields = { status: req.body.status };
+    if (req.body.status === 'Approved') {
+      updateFields.paymentStatus = 'Paid';
+    }
+
     const booking = await Booking.findByIdAndUpdate(
       req.params.id,
-      { status: req.body.status },
+      updateFields,
       { new: true, runValidators: true }
     );
+
     if (!booking) return res.status(404).json({ message: 'Booking not found' });
+
+    if (req.body.status === 'Approved') {
+      // Find or create Payment
+      let payment = await Payment.findOne({ booking: booking._id });
+      if (!payment) {
+        await Payment.create({
+          booking: booking._id,
+          user: booking.user,
+          amount: booking.totalAmount,
+          method: 'Card',
+          transactionId: 'TXN-' + Date.now().toString().slice(-8),
+          status: 'Success'
+        });
+      }
+    }
+
     res.json(booking);
   } catch (err) {
     res.status(400).json({ message: err.message });

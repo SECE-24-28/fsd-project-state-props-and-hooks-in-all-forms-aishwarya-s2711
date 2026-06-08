@@ -19,4 +19,9 @@ const adminOnly = (req, res, next) => {
   next();
 };
 
-module.exports = { protect, adminOnly };
+const onlyAdmin = (req, res, next) => {
+  if (req.user?.role !== 'admin') return res.status(403).json({ message: 'Only admins are authorized' });
+  next();
+};
+
+module.exports = { protect, adminOnly, onlyAdmin };

@@ -7,7 +7,7 @@ const bookingSchema = new mongoose.Schema({
   persons:       { type: Number, required: true, min: 1 },
   travelDate:    { type: Date, required: true },
   totalAmount:   { type: Number, required: true },
-  status:        { type: String, enum: ['Pending','Confirmed','Cancelled','Completed'], default: 'Pending' },
+  status:        { type: String, enum: ['Pending','Approved','Denied','Cancelled','Completed'], default: 'Pending' },
   paymentStatus: { type: String, enum: ['Unpaid','Paid','Refunded'], default: 'Unpaid' },
   paymentId:     { type: String, default: '' },
   bookingId:     { type: String, unique: true },
