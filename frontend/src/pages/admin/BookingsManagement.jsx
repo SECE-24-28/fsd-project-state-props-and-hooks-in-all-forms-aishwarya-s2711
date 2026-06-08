@@ -101,7 +101,7 @@ export default function BookingsManagement() {
                       <span className={`badge px-2.5 py-1 text-[10px] font-bold uppercase rounded-md tracking-wider ${
                         b.status === 'Approved' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' :
                         b.status === 'Pending' ? 'bg-amber-50 text-amber-600 border border-amber-100' :
-                        b.status === 'Rejected' ? 'bg-rose-50 text-rose-600 border border-rose-100' :
+                        b.status === 'Denied' ? 'bg-rose-50 text-rose-600 border border-rose-100' :
                         'bg-slate-50 text-slate-600 border border-slate-100'
                       }`}>
                         {b.status}
@@ -117,7 +117,7 @@ export default function BookingsManagement() {
                             <button onClick={() => handleUpdateStatus(b._id, 'Approved')} className="p-1 text-emerald-600 hover:bg-emerald-50 rounded transition-colors" title="Approve">
                               <FiCheck size={16} />
                             </button>
-                            <button onClick={() => handleUpdateStatus(b._id, 'Rejected')} className="p-1 text-rose-600 hover:bg-rose-50 rounded transition-colors" title="Reject">
+                            <button onClick={() => handleUpdateStatus(b._id, 'Denied')} className="p-1 text-rose-600 hover:bg-rose-50 rounded transition-colors" title="Deny">
                               <FiX size={16} />
                             </button>
                           </>
@@ -268,8 +268,8 @@ export default function BookingsManagement() {
                   <button onClick={() => handleUpdateStatus(selectedBooking._id, 'Approved')} className="btn btn-primary bg-emerald-600 text-white text-xs hover:bg-emerald-700 flex items-center gap-1">
                     <FiCheck size={14} /> Approve Booking
                   </button>
-                  <button onClick={() => handleUpdateStatus(selectedBooking._id, 'Rejected')} className="btn bg-rose-600 text-white text-xs hover:bg-rose-700 flex items-center gap-1">
-                    <FiX size={14} /> Reject Booking
+                  <button onClick={() => handleUpdateStatus(selectedBooking._id, 'Denied')} className="btn bg-rose-600 text-white text-xs hover:bg-rose-700 flex items-center gap-1" title="Deny Booking">
+                    <FiX size={14} /> Deny Booking
                   </button>
                 </>
               )}

@@ -89,7 +89,7 @@ export default function Overview() {
             const colorMap = {
               Pending: 'text-amber-600 bg-amber-50/50 border-amber-100',
               Approved: 'text-emerald-600 bg-emerald-50/50 border-emerald-100',
-              Rejected: 'text-rose-600 bg-rose-50/50 border-rose-100',
+              Denied: 'text-rose-600 bg-rose-50/50 border-rose-100',
               Cancelled: 'text-slate-600 bg-slate-50 border-slate-100',
             };
             const colorClass = colorMap[item.name] || 'text-slate-600 bg-slate-50 border-slate-100';
